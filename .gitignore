@@ -39,3 +39,7 @@ HELP.md
 # Maven
 log/
 target/
+.mvn/
+.attach_pid19475
+mvnw
+mvnw.cmd
