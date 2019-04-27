@@ -124,7 +124,7 @@ public class Topic {
 
 		this.status.registerNewReply(this, newReply);
 	}
-
+	
 	public void markAsSolved(Answer solution) {
 		Assert.notNull(solution, "A resposta de solução não pode ser nula");
 

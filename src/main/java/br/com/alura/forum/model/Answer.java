@@ -1,8 +1,9 @@
 package br.com.alura.forum.model;
 
+import javax.persistence.*;
+
 import br.com.alura.forum.model.topic.domain.Topic;
 
-import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
@@ -55,7 +56,7 @@ public class Answer {
 	public boolean isSolution() {
 		return solution;
 	}
-
+	
 	public Topic getTopic() {
 		return topic;
 	}
@@ -67,7 +68,7 @@ public class Answer {
 	public User getOwner() {
 		return owner;
 	}
-
+	
 	public void markAsSolution() {
 		this.solution = true;
 		this.topic.markAsSolved(this);

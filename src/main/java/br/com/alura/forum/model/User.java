@@ -41,12 +41,12 @@ public class User {
 		return name;
 	}
 
-	public String getEmail() {
-		return this.email;
-	}
-	
 	public String getPassword() {
 		return this.password;
+	}
+
+	public String getEmail() {
+		return this.email;
 	}
 
 	@Override

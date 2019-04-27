@@ -13,7 +13,7 @@ import br.com.alura.forum.model.topic.domain.TopicStatus;
 
 public class TopicBriefOutputDto {
 
-	private Long id;
+	private Integer id;
 	private String shortDescription;
 	private long secondsSinceLastUpdate;
 	private String ownerName;
@@ -24,7 +24,7 @@ public class TopicBriefOutputDto {
 	private boolean solved;
 	
 	public TopicBriefOutputDto(Topic topic) {
-		this.id = topic.getId();
+		this.id = topic.getId().intValue();
 		this.shortDescription = topic.getShortDescription();
 		this.secondsSinceLastUpdate = getSecondsSince(topic.getLastUpdate());
 		this.ownerName = topic.getOwner().getName();
@@ -36,10 +36,11 @@ public class TopicBriefOutputDto {
 	}
 
 	private long getSecondsSince(Instant lastUpdate) {
-		return Duration.between(lastUpdate, Instant.now()).get(ChronoUnit.SECONDS);
+		return Duration.between(lastUpdate, Instant.now())
+				.get(ChronoUnit.SECONDS);
 	}
-
-	public Long getId() {
+	
+	public Integer getId() {
 		return id;
 	}
 
@@ -71,16 +72,15 @@ public class TopicBriefOutputDto {
 		return numberOfResponses;
 	}
 
-	public boolean isSolved() {
-		return solved;
-	}
-	
-	public static List<TopicBriefOutputDto> listFromTopics(List<Topic> topics) {
-		return topics.stream().map(TopicBriefOutputDto::new).collect(Collectors.toList());
-	}
-	
-	public static Page<TopicBriefOutputDto> listFromTopics(Page<Topic> topicPage) {
-		return topicPage.map(TopicBriefOutputDto::new);
+    public boolean isSolved() { return solved; }
+
+    public static List<TopicBriefOutputDto> listFromTopics(List<Topic> topics) {
+		return topics.stream()
+				.map(TopicBriefOutputDto::new)
+				.collect(Collectors.toList());
 	}
 
+    public static Page<TopicBriefOutputDto> listFromTopics(Page<Topic> topicPage) {
+        return topicPage.map(TopicBriefOutputDto::new);
+    }
 }
