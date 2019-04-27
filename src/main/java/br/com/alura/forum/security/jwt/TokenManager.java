@@ -32,4 +32,5 @@ public class TokenManager {
 				.signWith(SignatureAlgorithm.HS256, this.secret)
 				.compact();
 	}
+	
 }
