@@ -1,7 +1,9 @@
 package br.com.alura.forum.controller.dto.output;
 
 import java.time.Instant;
+import java.util.List;
 
+import br.com.alura.forum.model.Answer;
 import br.com.alura.forum.model.topic.domain.Topic;
 import br.com.alura.forum.model.topic.domain.TopicStatus;
 
@@ -18,6 +20,7 @@ public class TopicOutputDto {
 	private String courseName;
 	private String subcategoryName;
 	private String categoryName;
+	private List<Answer> answers;
 
 	public TopicOutputDto(Topic topic) {
 		this.id = topic.getId();
@@ -31,6 +34,7 @@ public class TopicOutputDto {
 		this.courseName = topic.getCourse().getName();
 		this.subcategoryName = topic.getCourse().getSubcategoryName();
 		this.categoryName = topic.getCourse().getCategoryName();
+		this.setAnswers(topic.getAnswers());
 	}
 
 	public Long getId() {
@@ -119,5 +123,13 @@ public class TopicOutputDto {
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
 	}
 }
