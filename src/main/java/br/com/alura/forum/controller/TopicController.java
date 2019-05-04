@@ -1,6 +1,9 @@
 package br.com.alura.forum.controller;
 
+import java.net.URI;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,13 +12,22 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.alura.forum.repository.CourseRepository;
+import br.com.alura.forum.controller.dto.input.NewTopicInputDto;
 import br.com.alura.forum.controller.dto.input.TopicSearchInputDto;
 import br.com.alura.forum.controller.dto.output.TopicBriefOutputDto;
 import br.com.alura.forum.controller.dto.output.TopicDashboardItemOutputDto;
+import br.com.alura.forum.controller.dto.output.TopicOutputDto;
+import br.com.alura.forum.model.User;
 import br.com.alura.forum.model.topic.domain.Topic;
 import br.com.alura.forum.repository.TopicRepository;
 import br.com.alura.forum.service.DashboardDataProcessingService;
@@ -30,6 +42,9 @@ public class TopicController {
 	
 	@Autowired
 	private DashboardDataProcessingService dashboardDataProcessingService;
+
+	@Autowired
+	private CourseRepository courseRepository;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<TopicBriefOutputDto> listTopics(TopicSearchInputDto topicSearch,
@@ -46,6 +61,16 @@ public class TopicController {
     
     		CategoriesAndTheirStatisticsData categoriesStatisticsData = this.dashboardDataProcessingService.execute();
     		return TopicDashboardItemOutputDto.listFromCategories(categoriesStatisticsData);
-    		
     }
+    
+    @PostMapping(consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TopicOutputDto> createTopic(@Valid @RequestBody NewTopicInputDto newTopicInputDto, @AuthenticationPrincipal User loggedUser, UriComponentsBuilder uriBuilder) {
+
+    	Topic topic = newTopicInputDto.build(loggedUser, this.courseRepository);
+    	this.topicRepository.save(topic);
+    	
+    	URI uri = uriBuilder.path("/api/topics/{id}").buildAndExpand(topic.getId()).toUri();
+    	
+    	return ResponseEntity.created(uri).body(new TopicOutputDto(topic));
+	}
 }
