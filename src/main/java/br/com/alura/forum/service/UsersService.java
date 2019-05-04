@@ -21,8 +21,15 @@ public class UsersService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<User> possibleUser = userRepository.findByEmail(username);
 		return possibleUser.orElseThrow(() ->
-			new UsernameNotFoundException("Não foi possível " + 
+			new UsernameNotFoundException("Não foi possível " +
 					"encontrar o usuário com o email: " + username));
+	}
+
+	public UserDetails loadUserById(Long userId) {
+		Optional<User> possibleUser = userRepository.findById(userId);
+		return possibleUser.orElseThrow(() ->
+			new UsernameNotFoundException("Não foi possível " +
+					"encontrar o usuário com o id: " + userId));
 	}
 
 }
